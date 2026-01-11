@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Represents a Journal Main Page ID.
  */
+@Deprecated
 public class JournalMainPageID extends SectionIdentifier {
 
     /**

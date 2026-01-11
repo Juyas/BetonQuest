@@ -3,12 +3,13 @@ package org.betonquest.betonquest.kernel.processor.quest;
 import org.betonquest.betonquest.api.QuestException;
 import org.betonquest.betonquest.api.config.quest.QuestPackage;
 import org.betonquest.betonquest.api.config.quest.QuestPackageManager;
+import org.betonquest.betonquest.api.identifier.IdentifierFactory;
+import org.betonquest.betonquest.api.identifier.PlaceholderIdentifier;
 import org.betonquest.betonquest.api.instruction.Instruction;
 import org.betonquest.betonquest.api.kernel.TypeFactory;
 import org.betonquest.betonquest.api.logger.BetonQuestLogger;
 import org.betonquest.betonquest.api.profile.Profile;
 import org.betonquest.betonquest.api.quest.Placeholders;
-import org.betonquest.betonquest.api.quest.placeholder.PlaceholderID;
 import org.betonquest.betonquest.kernel.processor.TypedQuestProcessor;
 import org.betonquest.betonquest.kernel.processor.adapter.PlaceholderAdapter;
 import org.betonquest.betonquest.kernel.registry.quest.PlaceholderTypeRegistry;
@@ -22,7 +23,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Stores Placeholders and resolve them.
  */
-public class PlaceholderProcessor extends TypedQuestProcessor<PlaceholderID, PlaceholderAdapter> implements Placeholders {
+public class PlaceholderProcessor extends TypedQuestProcessor<PlaceholderIdentifier, PlaceholderAdapter> implements Placeholders {
 
     /**
      * Empty placeholders to satisfy object structure.
@@ -57,16 +58,17 @@ public class PlaceholderProcessor extends TypedQuestProcessor<PlaceholderID, Pla
     /**
      * Create a new {@link Placeholders} to store placeholders, resolves them and create new.
      *
-     * @param log              the custom logger for this class
-     * @param packManager      the quest package manager to get quest packages from
-     * @param placeholderTypes the available placeholder types
-     * @param scheduler        the bukkit scheduler to run sync tasks
-     * @param plugin           the plugin instance
+     * @param log                          the custom logger for this class
+     * @param packManager                  the quest package manager to get quest packages from
+     * @param placeholderTypes             the available placeholder types
+     * @param scheduler                    the bukkit scheduler to run sync tasks
+     * @param placeholderIdentifierFactory the factory to create placeholder identifiers
+     * @param plugin                       the plugin instance
      */
     public PlaceholderProcessor(final BetonQuestLogger log, final QuestPackageManager packManager,
                                 final PlaceholderTypeRegistry placeholderTypes, final BukkitScheduler scheduler,
-                                final Plugin plugin) {
-        super(log, EMPTY_PLACEHOLDER, packManager, placeholderTypes, "Placeholders", "placeholders");
+                                final IdentifierFactory<PlaceholderIdentifier> placeholderIdentifierFactory, final Plugin plugin) {
+        super(log, EMPTY_PLACEHOLDER, packManager, placeholderTypes, placeholderIdentifierFactory, "Placeholders", "placeholders");
         this.scheduler = scheduler;
         this.plugin = plugin;
     }
@@ -77,16 +79,11 @@ public class PlaceholderProcessor extends TypedQuestProcessor<PlaceholderID, Pla
     }
 
     @Override
-    protected PlaceholderID getIdentifier(final QuestPackage pack, final String identifier) throws QuestException {
-        return new PlaceholderID(this, packManager, pack, identifier);
-    }
-
-    @Override
     public PlaceholderAdapter create(@Nullable final QuestPackage pack, final String instruction)
             throws QuestException {
-        final PlaceholderID placeholderID;
+        final PlaceholderIdentifier placeholderID;
         try {
-            placeholderID = new PlaceholderID(this, packManager, pack, instruction);
+            placeholderID = getIdentifier(pack, instruction);
         } catch (final QuestException e) {
             throw new QuestException("Could not load placeholder: " + e.getMessage(), e);
         }

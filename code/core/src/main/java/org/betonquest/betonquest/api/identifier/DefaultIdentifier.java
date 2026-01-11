@@ -27,6 +27,17 @@ public abstract class DefaultIdentifier implements Identifier {
     private final String identifier;
 
     /**
+     * Creates a new identifier without resolving the package.
+     *
+     * @param pack       the package the object is in
+     * @param identifier the identifier of the object without the package name
+     */
+    protected DefaultIdentifier(final QuestPackage pack, final String identifier) {
+        this.pack = pack;
+        this.identifier = identifier;
+    }
+
+    /**
      * Creates a new Identifier. Handles relative and absolute paths and edge cases with special Identifiers.
      *
      * @param packManager the package manager to resolve packages
@@ -34,6 +45,7 @@ public abstract class DefaultIdentifier implements Identifier {
      * @param identifier  the identifier string leading to the object
      * @throws QuestException if the identifier could not be parsed
      */
+    @Deprecated
     protected DefaultIdentifier(final QuestPackageManager packManager, @Nullable final QuestPackage pack,
                                 final String identifier) throws QuestException {
         final RawIdentifier rawIdentifier = splitIdentifier(identifier);

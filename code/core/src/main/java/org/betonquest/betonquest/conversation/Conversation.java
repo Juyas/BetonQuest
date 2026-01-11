@@ -8,9 +8,10 @@ import org.betonquest.betonquest.api.bukkit.event.ConversationOptionEvent;
 import org.betonquest.betonquest.api.bukkit.event.PlayerConversationEndEvent;
 import org.betonquest.betonquest.api.common.component.VariableReplacement;
 import org.betonquest.betonquest.api.config.quest.QuestPackage;
+import org.betonquest.betonquest.api.identifier.ConditionIdentifier;
+import org.betonquest.betonquest.api.identifier.ConversationIdentifier;
 import org.betonquest.betonquest.api.logger.BetonQuestLogger;
 import org.betonquest.betonquest.api.profile.OnlineProfile;
-import org.betonquest.betonquest.api.quest.condition.ConditionID;
 import org.betonquest.betonquest.config.PluginMessage;
 import org.betonquest.betonquest.conversation.ConversationData.OptionType;
 import org.betonquest.betonquest.conversation.interceptor.Interceptor;
@@ -94,7 +95,7 @@ public class Conversation {
     /**
      * The ID of this conversation.
      */
-    private final ConversationID identifier;
+    private final ConversationIdentifier identifier;
 
     /**
      * A map of options that the player can currently choose.
@@ -152,7 +153,7 @@ public class Conversation {
      * @param endCallable    the callable that removes the conversation from the active ones
      * @throws QuestException when required conversation objects could not be created
      */
-    public Conversation(final BetonQuestLogger log, final PluginMessage pluginMessage, final OnlineProfile onlineProfile, final ConversationID conversationID,
+    public Conversation(final BetonQuestLogger log, final PluginMessage pluginMessage, final OnlineProfile onlineProfile, final ConversationIdentifier conversationID,
                         final Location center, final Runnable endCallable) throws QuestException {
         this.log = log;
         this.endCallable = endCallable;
@@ -243,7 +244,7 @@ public class Conversation {
     private void printOptions(final List<ResolvedOption> options) {
         final List<Pair<ResolvedOption, CompletableFuture<Boolean>>> futuresOptions = new ArrayList<>();
         for (final ResolvedOption option : options) {
-            final List<ConditionID> conditionIDs = option.conversationData().getConditionIDs(option.name(), option.type());
+            final List<ConditionIdentifier> conditionIDs = option.conversationData().getConditionIDs(option.name(), option.type());
             final CompletableFuture<Boolean> future = CompletableFuture.supplyAsync(
                     () -> plugin.getQuestTypeApi().conditions(onlineProfile, conditionIDs));
             futuresOptions.add(Pair.of(option, future));

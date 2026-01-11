@@ -19,7 +19,19 @@ public abstract class InstructionIdentifier extends DefaultIdentifier {
     /**
      * The created instruction of the object.
      */
+    @Nullable
     private final Instruction instruction;
+
+    /**
+     * Constructor of an identifier without an instruction.
+     *
+     * @param pack       the package the instruction is in
+     * @param identifier the identifier string leading to the instruction
+     */
+    public InstructionIdentifier(final QuestPackage pack, final String identifier) {
+        super(pack, identifier);
+        this.instruction = null;
+    }
 
     /**
      * Constructor of an identifier that creates an instruction from the given function.
@@ -30,6 +42,7 @@ public abstract class InstructionIdentifier extends DefaultIdentifier {
      * @param instructionFunction the instruction provided by this identifier
      * @throws QuestException if the identifier could not be parsed
      */
+    @Deprecated
     protected InstructionIdentifier(final QuestPackageManager packManager, @Nullable final QuestPackage pack,
                                     final String identifier,
                                     final QuestFunction<Identifier, Instruction> instructionFunction) throws QuestException {
@@ -48,6 +61,7 @@ public abstract class InstructionIdentifier extends DefaultIdentifier {
      * @param readable     the readable name of the object type
      * @throws QuestException if the identifier or instruction could not be parsed
      */
+    @Deprecated
     protected InstructionIdentifier(final Placeholders placeholders, final QuestPackageManager packManager, @Nullable final QuestPackage pack,
                                     final String identifier, final String section, final String readable) throws QuestException {
         this(packManager, pack, identifier, id -> {
@@ -65,6 +79,8 @@ public abstract class InstructionIdentifier extends DefaultIdentifier {
      *
      * @return the instruction of this ID
      */
+    @Nullable
+    @Deprecated
     public Instruction getInstruction() {
         return instruction;
     }

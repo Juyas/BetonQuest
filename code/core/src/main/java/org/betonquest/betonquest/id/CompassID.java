@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Represents a quest compass ID.
  */
+@Deprecated
 public class CompassID extends SectionIdentifier {
 
     /**

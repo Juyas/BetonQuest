@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * ID of an Action.
  */
+@Deprecated
 public class ActionID extends InstructionIdentifier {
 
     /**
@@ -21,6 +22,7 @@ public class ActionID extends InstructionIdentifier {
      * @param identifier   the complete identifier of the action
      * @throws QuestException if there is no such action
      */
+    @Deprecated
     public ActionID(final Placeholders placeholders, final QuestPackageManager packManager, @Nullable final QuestPackage pack,
                     final String identifier) throws QuestException {
         super(placeholders, packManager, pack, identifier, "actions", "Action");

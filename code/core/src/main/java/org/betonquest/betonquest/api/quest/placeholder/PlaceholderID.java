@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * This class represents placeholder-related identifiers.
  */
+@Deprecated
 public class PlaceholderID extends InstructionIdentifier {
 
     /**

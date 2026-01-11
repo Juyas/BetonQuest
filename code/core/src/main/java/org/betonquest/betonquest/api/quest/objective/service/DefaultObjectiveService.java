@@ -5,7 +5,10 @@ import org.betonquest.betonquest.api.QuestException;
 import org.betonquest.betonquest.api.bukkit.event.QuestDataUpdateEvent;
 import org.betonquest.betonquest.api.common.function.QuestFunction;
 import org.betonquest.betonquest.api.config.quest.QuestPackage;
-import org.betonquest.betonquest.api.identifier.DefaultIdentifier;
+import org.betonquest.betonquest.api.identifier.ActionIdentifier;
+import org.betonquest.betonquest.api.identifier.ConditionIdentifier;
+import org.betonquest.betonquest.api.identifier.Identifier;
+import org.betonquest.betonquest.api.identifier.ObjectiveIdentifier;
 import org.betonquest.betonquest.api.instruction.Argument;
 import org.betonquest.betonquest.api.instruction.FlagArgument;
 import org.betonquest.betonquest.api.instruction.Instruction;
@@ -15,7 +18,6 @@ import org.betonquest.betonquest.api.profile.Profile;
 import org.betonquest.betonquest.api.profile.ProfileProvider;
 import org.betonquest.betonquest.api.quest.action.ActionID;
 import org.betonquest.betonquest.api.quest.condition.ConditionID;
-import org.betonquest.betonquest.api.quest.objective.ObjectiveID;
 import org.betonquest.betonquest.api.quest.objective.ObjectiveState;
 import org.betonquest.betonquest.database.PlayerData;
 import org.betonquest.betonquest.database.Saver;
@@ -90,7 +92,7 @@ public class DefaultObjectiveService implements ObjectiveService {
     /**
      * The objective related to this service.
      */
-    private ObjectiveID objectiveID;
+    private ObjectiveIdentifier objectiveID;
 
     /**
      * Creates a new objective service.
@@ -103,7 +105,7 @@ public class DefaultObjectiveService implements ObjectiveService {
      * @param profileProvider    the profile provider to use
      * @throws QuestException if the objective service data of the instruction could not be parsed
      */
-    public DefaultObjectiveService(final ObjectiveID objectiveID, final ActionProcessor actionProcessor,
+    public DefaultObjectiveService(final ObjectiveIdentifier objectiveID, final ActionProcessor actionProcessor,
                                    final ConditionProcessor conditionProcessor, final ObjectiveServiceProvider objectiveService,
                                    final BetonQuestLoggerFactory factory, final ProfileProvider profileProvider) throws QuestException {
         this.objectiveID = objectiveID;
@@ -121,8 +123,8 @@ public class DefaultObjectiveService implements ObjectiveService {
 
     private static ObjectiveServiceData parseObjectiveData(final Instruction instruction) throws QuestException {
         final FlagArgument<Boolean> persistent = instruction.bool().getFlag("persistent", true);
-        final Optional<Argument<List<ActionID>>> actions = instruction.parse(ActionID::new).list().get("actions");
-        final Optional<Argument<List<ConditionID>>> conditions = instruction.parse(ConditionID::new).list().get("conditions");
+        final Optional<Argument<List<ActionIdentifier>>> actions = instruction.parse(ActionID::new).list().get("actions");
+        final Optional<Argument<List<ConditionIdentifier>>> conditions = instruction.parse(ConditionID::new).list().get("conditions");
         final FlagArgument<Number> notify = instruction.number().atLeast(0).getFlag("notify", 1);
         return new ObjectiveServiceData(conditions, actions, persistent, notify);
     }
@@ -177,12 +179,12 @@ public class DefaultObjectiveService implements ObjectiveService {
     }
 
     @Override
-    public void renameObjective(final ObjectiveID newObjectiveID) {
+    public void renameObjective(final ObjectiveIdentifier newObjectiveID) {
         this.objectiveID = newObjectiveID;
     }
 
     @Override
-    public ObjectiveID getObjectiveID() {
+    public ObjectiveIdentifier getObjectiveID() {
         return objectiveID;
     }
 
@@ -200,19 +202,19 @@ public class DefaultObjectiveService implements ObjectiveService {
     public boolean checkConditions(@Nullable final Profile profile) throws QuestException {
         getLogger().debug("Checking conditions for objective '%s' and profile '%s'".formatted(objectiveID, profile));
         final ObjectiveServiceDataProvider provider = getServiceDataProvider();
-        final List<ConditionID> conditions = provider.getConditions(profile);
+        final List<ConditionIdentifier> conditions = provider.getConditions(profile);
         return conditions.isEmpty() || conditionProcessor.checks(profile, conditions, true);
     }
 
     @Override
     public void callActions(@Nullable final Profile profile) throws QuestException {
         final ObjectiveServiceDataProvider provider = getServiceDataProvider();
-        final List<ActionID> events = provider.getActions(profile);
+        final List<ActionIdentifier> events = provider.getActions(profile);
         if (events.isEmpty()) {
             return;
         }
         getLogger().debug("Calling actions [%s] for objective '%s' and profile '%s'"
-                .formatted(String.join(",", events.stream().map(DefaultIdentifier::toString).toList()), objectiveID, profile));
+                .formatted(String.join(",", events.stream().map(Identifier::toString).toList()), objectiveID, profile));
         actionProcessor.executes(profile, events);
     }
 

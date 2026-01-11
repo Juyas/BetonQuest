@@ -1,5 +1,6 @@
 package org.betonquest.betonquest.bstats;
 
+import org.betonquest.betonquest.api.identifier.Identifier;
 import org.betonquest.betonquest.api.identifier.InstructionIdentifier;
 
 import java.util.Set;
@@ -9,7 +10,7 @@ import java.util.Set;
  *
  * @param <T> kind of {@link InstructionIdentifier} that is supplied
  */
-public interface InstructionMetricsSupplier<T extends InstructionIdentifier> {
+public interface InstructionMetricsSupplier<T extends Identifier> {
 
     /**
      * Fetch a set of all current {@link InstructionIdentifier}s.

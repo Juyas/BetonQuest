@@ -2,10 +2,10 @@ package org.betonquest.betonquest.api.instruction;
 
 import org.betonquest.betonquest.api.QuestException;
 import org.betonquest.betonquest.api.feature.FeatureApi;
+import org.betonquest.betonquest.api.identifier.ItemIdentifier;
 import org.betonquest.betonquest.api.instruction.type.ItemWrapper;
 import org.betonquest.betonquest.api.item.QuestItem;
 import org.betonquest.betonquest.api.profile.Profile;
-import org.betonquest.betonquest.id.ItemID;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +23,7 @@ public class Item implements ItemWrapper {
     /**
      * Item id to generate the QuestItem with.
      */
-    private final ItemID itemID;
+    private final ItemIdentifier itemID;
 
     /**
      * Size of the stack to create.
@@ -37,7 +37,7 @@ public class Item implements ItemWrapper {
      * @param itemID     the QuestItemID to create
      * @param amount     the size to set the created ItemStack to
      */
-    public Item(final FeatureApi featureApi, final ItemID itemID, final Argument<Number> amount) {
+    public Item(final FeatureApi featureApi, final ItemIdentifier itemID, final Argument<Number> amount) {
         this.itemID = itemID;
         this.featureApi = featureApi;
         this.amount = amount;
@@ -54,7 +54,7 @@ public class Item implements ItemWrapper {
     }
 
     @Override
-    public ItemID getID() {
+    public ItemIdentifier getID() {
         return itemID;
     }
 

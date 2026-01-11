@@ -349,8 +349,13 @@ public class BetonQuest extends JavaPlugin implements BetonQuestApi, LanguagePro
         lastExecutionCache = new LastExecutionCache(loggerFactory.create(LastExecutionCache.class, "Cache"), cache);
 
         questTypeRegistries = BaseQuestTypeRegistries.create(loggerFactory, this);
-        final CoreQuestRegistry coreQuestRegistry = CoreQuestRegistry.create(loggerFactory, questManager, questTypeRegistries,
-                getServer().getPluginManager(), getServer().getScheduler(), profileProvider, this);
+        final CoreQuestRegistry coreQuestRegistry;
+        try {
+            coreQuestRegistry = CoreQuestRegistry.create(loggerFactory, questManager, questTypeRegistries,
+                    getServer().getPluginManager(), getServer().getScheduler(), profileProvider, this);
+        } catch (final QuestException e) {
+            throw new IllegalStateException("Could not load the core quests registries!", e);
+        }
 
         final PlayerDataFactory playerDataFactory = new PlayerDataFactory(loggerFactory, coreQuestRegistry.placeholders(), questManager, saver, getServer(),
                 coreQuestRegistry, Suppliers.memoize(() -> new JournalFactory(loggerFactory, pluginMessage,
@@ -371,8 +376,13 @@ public class BetonQuest extends JavaPlugin implements BetonQuestApi, LanguagePro
 
         final ParsedSectionTextCreator textCreator = new ParsedSectionTextCreator(textParser, playerDataStorage,
                 this, coreQuestRegistry.placeholders());
-        questRegistry = QuestRegistry.create(loggerFactory.create(QuestRegistry.class), loggerFactory, this,
-                coreQuestRegistry, featureRegistries, pluginMessage, textCreator, profileProvider, playerDataStorage);
+        try {
+            questRegistry = QuestRegistry.create(loggerFactory.create(QuestRegistry.class), loggerFactory, this,
+                    coreQuestRegistry, featureRegistries, pluginMessage, textCreator, profileProvider, playerDataStorage,
+                    questTypeRegistries.identifiers());
+        } catch (final QuestException e) {
+            throw new IllegalStateException("Could not load the quest feature registries!", e);
+        }
 
         setupUpdater();
         registerListener(coreQuestRegistry);

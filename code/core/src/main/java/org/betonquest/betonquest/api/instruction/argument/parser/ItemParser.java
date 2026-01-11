@@ -5,6 +5,7 @@ import org.betonquest.betonquest.api.QuestException;
 import org.betonquest.betonquest.api.config.quest.QuestPackage;
 import org.betonquest.betonquest.api.config.quest.QuestPackageManager;
 import org.betonquest.betonquest.api.feature.FeatureApi;
+import org.betonquest.betonquest.api.identifier.ItemIdentifier;
 import org.betonquest.betonquest.api.instruction.Argument;
 import org.betonquest.betonquest.api.instruction.Item;
 import org.betonquest.betonquest.api.instruction.argument.InstructionArgumentParser;
@@ -39,7 +40,7 @@ public class ItemParser implements InstructionArgumentParser<ItemWrapper> {
 
     @Override
     public ItemWrapper apply(final Placeholders placeholders, final QuestPackageManager packManager, final QuestPackage pack, final String string) throws QuestException {
-        final ItemID item;
+        final ItemIdentifier item;
         final Argument<Number> number;
         if (string.contains(":")) {
             final String[] parts = string.split(":", 2);

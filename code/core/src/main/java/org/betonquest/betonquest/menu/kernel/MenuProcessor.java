@@ -155,7 +155,7 @@ public class MenuProcessor extends RPGMenuProcessor<MenuID, Menu> {
             }
             final List<Slots> slots = new ArrayList<>();
             for (final String key : slotsSection.getKeys(false)) {
-                final Argument<List<MenuItemID>> itemsList = new DefaultListArgument<>(placeholders, pack,
+                final Argument<List<MenuItemIdentifier>> itemsList = new DefaultListArgument<>(placeholders, pack,
                         slotsSection.getString(key, ""), value -> new MenuItemID(packManager, pack, value));
                 try {
                     slots.add(new Slots(rpgMenu, key, itemsList));

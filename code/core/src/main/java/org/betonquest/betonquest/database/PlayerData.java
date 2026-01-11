@@ -6,6 +6,7 @@ import org.betonquest.betonquest.api.bukkit.event.PlayerTagAddEvent;
 import org.betonquest.betonquest.api.bukkit.event.PlayerTagRemoveEvent;
 import org.betonquest.betonquest.api.bukkit.event.PlayerUpdatePointEvent;
 import org.betonquest.betonquest.api.config.quest.QuestPackageManager;
+import org.betonquest.betonquest.api.identifier.ObjectiveIdentifier;
 import org.betonquest.betonquest.api.logger.BetonQuestLogger;
 import org.betonquest.betonquest.api.profile.Profile;
 import org.betonquest.betonquest.api.quest.Placeholders;
@@ -369,7 +370,7 @@ public class PlayerData implements TagData, PointData {
      *
      * @param objectiveID ID of the objective
      */
-    public void addNewRawObjective(final ObjectiveID objectiveID) {
+    public void addNewRawObjective(final ObjectiveIdentifier objectiveID) {
         final Objective obj;
         try {
             obj = questTypeApi.getObjective(objectiveID);
@@ -400,7 +401,7 @@ public class PlayerData implements TagData, PointData {
      * @return true if the objective was successfully added, false if it was
      * already there
      */
-    public boolean addRawObjective(final ObjectiveID objectiveID, final String data) {
+    public boolean addRawObjective(final ObjectiveIdentifier objectiveID, final String data) {
         final String idString = objectiveID.toString();
         if (objectives.containsKey(idString)) {
             return false;
@@ -414,7 +415,7 @@ public class PlayerData implements TagData, PointData {
      *
      * @param objectiveID the ID of the objective
      */
-    public void removeRawObjective(final ObjectiveID objectiveID) {
+    public void removeRawObjective(final ObjectiveIdentifier objectiveID) {
         objectives.remove(objectiveID.toString());
         removeObjFromDB(objectiveID.toString());
     }
@@ -425,7 +426,7 @@ public class PlayerData implements TagData, PointData {
      * @param objectiveID the ID of the objective
      * @param data        the data string of this objective (the one associated with ObjectiveData)
      */
-    public void addObjToDB(final ObjectiveID objectiveID, final String data) {
+    public void addObjToDB(final ObjectiveIdentifier objectiveID, final String data) {
         saver.add(new Record(UpdateType.ADD_OBJECTIVES, profileID, objectiveID.toString(), data));
     }
 

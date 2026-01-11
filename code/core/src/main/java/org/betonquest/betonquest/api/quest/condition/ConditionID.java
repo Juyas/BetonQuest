@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * ID of a Condition.
  */
+@Deprecated
 public class ConditionID extends InstructionIdentifier {
 
     /**
@@ -26,6 +27,7 @@ public class ConditionID extends InstructionIdentifier {
      * @param identifier   the complete identifier of the condition, inclusive exclamation mark for negating
      * @throws QuestException if there is no such condition
      */
+    @Deprecated
     public ConditionID(final Placeholders placeholders, final QuestPackageManager packManager, @Nullable final QuestPackage pack, final String identifier) throws QuestException {
         super(placeholders, packManager, pack, removeExclamationMark(identifier), "conditions", "Condition");
         this.isInverted = !identifier.isEmpty() && identifier.charAt(0) == '!';

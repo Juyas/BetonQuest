@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * ID of an Item.
  */
+@Deprecated
 public class ItemID extends InstructionIdentifier {
 
     /**

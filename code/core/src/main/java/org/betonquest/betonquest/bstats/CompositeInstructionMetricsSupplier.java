@@ -1,6 +1,7 @@
 package org.betonquest.betonquest.bstats;
 
 import org.betonquest.betonquest.api.identifier.InstructionIdentifier;
+import org.betonquest.betonquest.api.identifier.ReadableIdentifier;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -11,7 +12,7 @@ import java.util.function.Supplier;
  *
  * @param <T> kind of {@link InstructionIdentifier} that is supplied
  */
-public class CompositeInstructionMetricsSupplier<T extends InstructionIdentifier> implements InstructionMetricsSupplier<T> {
+public class CompositeInstructionMetricsSupplier<T extends ReadableIdentifier> implements InstructionMetricsSupplier<T> {
 
     /**
      * The supplier to use for {@link InstructionIdentifier}s.

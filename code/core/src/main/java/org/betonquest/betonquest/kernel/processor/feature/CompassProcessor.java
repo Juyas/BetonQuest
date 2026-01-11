@@ -3,13 +3,14 @@ package org.betonquest.betonquest.kernel.processor.feature;
 import org.betonquest.betonquest.api.QuestException;
 import org.betonquest.betonquest.api.config.quest.QuestPackage;
 import org.betonquest.betonquest.api.config.quest.QuestPackageManager;
+import org.betonquest.betonquest.api.identifier.CompassIdentifier;
+import org.betonquest.betonquest.api.identifier.ItemIdentifier;
 import org.betonquest.betonquest.api.instruction.Argument;
 import org.betonquest.betonquest.api.instruction.argument.parser.LocationParser;
 import org.betonquest.betonquest.api.logger.BetonQuestLogger;
 import org.betonquest.betonquest.api.quest.Placeholders;
 import org.betonquest.betonquest.api.text.Text;
 import org.betonquest.betonquest.feature.QuestCompass;
-import org.betonquest.betonquest.id.CompassID;
 import org.betonquest.betonquest.id.ItemID;
 import org.betonquest.betonquest.kernel.processor.SectionProcessor;
 import org.betonquest.betonquest.lib.instruction.argument.DefaultArgument;
@@ -21,7 +22,7 @@ import org.bukkit.configuration.ConfigurationSection;
 /**
  * Loads and stores {@link QuestCompass}es.
  */
-public class CompassProcessor extends SectionProcessor<CompassID, QuestCompass> {
+public class CompassProcessor extends SectionProcessor<CompassIdentifier, QuestCompass> {
 
     /**
      * Text creator to parse text.
@@ -51,12 +52,7 @@ public class CompassProcessor extends SectionProcessor<CompassID, QuestCompass> 
         }
         final Argument<Location> loc = new DefaultArgument<>(placeholders, pack, location, new LocationParser(Bukkit.getServer()));
         final String itemName = section.getString("item");
-        final ItemID itemID = itemName == null ? null : new ItemID(placeholders, packManager, pack, itemName);
+        final ItemIdentifier itemID = itemName == null ? null : new ItemID(placeholders, packManager, pack, itemName);
         return new QuestCompass(names, loc, itemID);
-    }
-
-    @Override
-    protected CompassID getIdentifier(final QuestPackage pack, final String identifier) throws QuestException {
-        return new CompassID(packManager, pack, identifier);
     }
 }

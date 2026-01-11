@@ -6,7 +6,15 @@ import org.betonquest.betonquest.api.config.quest.QuestPackage;
 import org.betonquest.betonquest.api.config.quest.QuestPackageManager;
 import org.betonquest.betonquest.api.feature.ConversationApi;
 import org.betonquest.betonquest.api.feature.FeatureApi;
-import org.betonquest.betonquest.api.identifier.InstructionIdentifier;
+import org.betonquest.betonquest.api.identifier.CompassIdentifier;
+import org.betonquest.betonquest.api.identifier.IdentifierFactory;
+import org.betonquest.betonquest.api.identifier.ItemIdentifier;
+import org.betonquest.betonquest.api.identifier.JournalEntryIdentifier;
+import org.betonquest.betonquest.api.identifier.JournalMainPageIdentifier;
+import org.betonquest.betonquest.api.identifier.NpcIdentifier;
+import org.betonquest.betonquest.api.identifier.QuestCancelerIdentifier;
+import org.betonquest.betonquest.api.identifier.ReadableIdentifier;
+import org.betonquest.betonquest.api.identifier.factory.IdentifierRegistry;
 import org.betonquest.betonquest.api.item.QuestItem;
 import org.betonquest.betonquest.api.logger.BetonQuestLogger;
 import org.betonquest.betonquest.api.logger.BetonQuestLoggerFactory;
@@ -14,7 +22,6 @@ import org.betonquest.betonquest.api.profile.Profile;
 import org.betonquest.betonquest.api.profile.ProfileProvider;
 import org.betonquest.betonquest.api.quest.Placeholders;
 import org.betonquest.betonquest.api.quest.npc.Npc;
-import org.betonquest.betonquest.api.quest.npc.NpcID;
 import org.betonquest.betonquest.api.quest.npc.feature.NpcHider;
 import org.betonquest.betonquest.api.text.Text;
 import org.betonquest.betonquest.bstats.InstructionMetricsSupplier;
@@ -23,11 +30,6 @@ import org.betonquest.betonquest.data.PlayerDataStorage;
 import org.betonquest.betonquest.feature.QuestCanceler;
 import org.betonquest.betonquest.feature.QuestCompass;
 import org.betonquest.betonquest.feature.journal.JournalMainPageEntry;
-import org.betonquest.betonquest.id.CompassID;
-import org.betonquest.betonquest.id.ItemID;
-import org.betonquest.betonquest.id.JournalEntryID;
-import org.betonquest.betonquest.id.JournalMainPageID;
-import org.betonquest.betonquest.id.QuestCancelerID;
 import org.betonquest.betonquest.kernel.processor.feature.CancelerProcessor;
 import org.betonquest.betonquest.kernel.processor.feature.CompassProcessor;
 import org.betonquest.betonquest.kernel.processor.feature.ConversationProcessor;
@@ -80,33 +82,36 @@ public record QuestRegistry(
     /**
      * Create a new Registry for storing and using Processors.
      *
-     * @param log               the custom logger for this registry
-     * @param loggerFactory     the logger factory used for new custom logger instances
-     * @param plugin            the plugin used to create new conversation data
-     * @param coreQuestRegistry the core quest type processors
-     * @param otherRegistries   the available other types
-     * @param pluginMessage     the {@link PluginMessage} instance
-     * @param textCreator       the text creator to parse text
-     * @param profileProvider   the profile provider instance
-     * @param playerDataStorage the storage to get player data
+     * @param log                the custom logger for this registry
+     * @param loggerFactory      the logger factory used for new custom logger instances
+     * @param plugin             the plugin used to create new conversation data
+     * @param coreQuestRegistry  the core quest type processors
+     * @param otherRegistries    the available other types
+     * @param pluginMessage      the {@link PluginMessage} instance
+     * @param textCreator        the text creator to parse text
+     * @param profileProvider    the profile provider instance
+     * @param playerDataStorage  the storage to get player data
+     * @param identifierRegistry the identifier registry to use for creating new identifiers
      * @return the newly created QuestRegistry
      */
     public static QuestRegistry create(final BetonQuestLogger log, final BetonQuestLoggerFactory loggerFactory,
                                        final BetonQuest plugin, final CoreQuestRegistry coreQuestRegistry,
                                        final BaseFeatureRegistries otherRegistries, final PluginMessage pluginMessage,
                                        final ParsedSectionTextCreator textCreator, final ProfileProvider profileProvider,
-                                       final PlayerDataStorage playerDataStorage) {
+                                       final PlayerDataStorage playerDataStorage, final IdentifierRegistry identifierRegistry) throws QuestException {
         final Placeholders placeholders = coreQuestRegistry.placeholders();
         final QuestPackageManager packManager = plugin.getQuestPackageManager();
+        final IdentifierFactory<ItemIdentifier> itemIdentifierFactory = identifierRegistry.getFactory(ItemIdentifier.class);
+        final IdentifierFactory<NpcIdentifier> npcIdentifierFactory = identifierRegistry.getFactory(NpcIdentifier.class);
         final ActionScheduling actionScheduling = new ActionScheduling(loggerFactory.create(ActionScheduling.class, "Schedules"), placeholders, packManager, otherRegistries.actionScheduling());
         final CancelerProcessor cancelers = new CancelerProcessor(loggerFactory.create(CancelerProcessor.class), loggerFactory, plugin, pluginMessage, placeholders, textCreator, coreQuestRegistry, playerDataStorage);
         final CompassProcessor compasses = new CompassProcessor(loggerFactory.create(CompassProcessor.class), placeholders, packManager, textCreator);
         final ConversationProcessor conversations = new ConversationProcessor(loggerFactory.create(ConversationProcessor.class), loggerFactory, plugin,
                 textCreator, otherRegistries.conversationIO(), otherRegistries.interceptor(), placeholders, pluginMessage);
-        final ItemProcessor items = new ItemProcessor(loggerFactory.create(ItemProcessor.class), placeholders, packManager, otherRegistries.item());
+        final ItemProcessor items = new ItemProcessor(loggerFactory.create(ItemProcessor.class), placeholders, itemIdentifierFactory, packManager, otherRegistries.item());
         final JournalEntryProcessor journalEntries = new JournalEntryProcessor(loggerFactory.create(JournalEntryProcessor.class), placeholders, packManager, textCreator);
         final JournalMainPageProcessor journalMainPages = new JournalMainPageProcessor(loggerFactory.create(JournalMainPageProcessor.class), placeholders, packManager, textCreator);
-        final NpcProcessor npcs = new NpcProcessor(loggerFactory.create(NpcProcessor.class), loggerFactory, placeholders, packManager,
+        final NpcProcessor npcs = new NpcProcessor(loggerFactory.create(NpcProcessor.class), loggerFactory, placeholders, packManager, npcIdentifierFactory,
                 otherRegistries.npc(), pluginMessage, plugin, profileProvider, coreQuestRegistry, conversations.getStarter());
         return new QuestRegistry(log, coreQuestRegistry, actionScheduling, cancelers, compasses, conversations, items, journalEntries, journalMainPages, npcs, new ArrayList<>());
     }
@@ -168,8 +173,8 @@ public record QuestRegistry(
      *
      * @return available instruction metrics
      */
-    public Map<String, InstructionMetricsSupplier<? extends InstructionIdentifier>> metricsSupplier() {
-        final Map<String, InstructionMetricsSupplier<? extends InstructionIdentifier>> map = new HashMap<>(core.metricsSupplier());
+    public Map<String, InstructionMetricsSupplier<? extends ReadableIdentifier>> metricsSupplier() {
+        final Map<String, InstructionMetricsSupplier<? extends ReadableIdentifier>> map = new HashMap<>(core.metricsSupplier());
         map.putAll(Map.ofEntries(
                 items.metricsSupplier(),
                 npcs.metricsSupplier())
@@ -183,37 +188,37 @@ public record QuestRegistry(
     }
 
     @Override
-    public Map<QuestCancelerID, QuestCanceler> getCancelers() {
+    public Map<QuestCancelerIdentifier, QuestCanceler> getCancelers() {
         return new HashMap<>(cancelers().getValues());
     }
 
     @Override
-    public QuestCanceler getCanceler(final QuestCancelerID cancelerID) throws QuestException {
+    public QuestCanceler getCanceler(final QuestCancelerIdentifier cancelerID) throws QuestException {
         return cancelers().get(cancelerID);
     }
 
     @Override
-    public Map<CompassID, QuestCompass> getCompasses() {
+    public Map<CompassIdentifier, QuestCompass> getCompasses() {
         return new HashMap<>(compasses().getValues());
     }
 
     @Override
-    public Text getJournalEntry(final JournalEntryID journalEntryID) throws QuestException {
+    public Text getJournalEntry(final JournalEntryIdentifier journalEntryID) throws QuestException {
         return journalEntries().get(journalEntryID);
     }
 
     @Override
-    public void renameJournalEntry(final JournalEntryID name, final JournalEntryID rename) {
+    public void renameJournalEntry(final JournalEntryIdentifier name, final JournalEntryIdentifier rename) {
         journalEntries().renameJournalEntry(name, rename);
     }
 
     @Override
-    public Map<JournalMainPageID, JournalMainPageEntry> getJournalMainPages() {
+    public Map<JournalMainPageIdentifier, JournalMainPageEntry> getJournalMainPages() {
         return new HashMap<>(journalMainPages().getValues());
     }
 
     @Override
-    public Npc<?> getNpc(final NpcID npcID, @Nullable final Profile profile) throws QuestException {
+    public Npc<?> getNpc(final NpcIdentifier npcID, @Nullable final Profile profile) throws QuestException {
         return npcs().get(npcID).getNpc(profile);
     }
 
@@ -223,7 +228,7 @@ public record QuestRegistry(
     }
 
     @Override
-    public QuestItem getItem(final ItemID itemID, @Nullable final Profile profile) throws QuestException {
+    public QuestItem getItem(final ItemIdentifier itemID, @Nullable final Profile profile) throws QuestException {
         return items().get(itemID).getItem(profile);
     }
 }

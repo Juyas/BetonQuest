@@ -3,6 +3,8 @@ package org.betonquest.betonquest.kernel.processor.feature;
 import org.betonquest.betonquest.api.BetonQuestApi;
 import org.betonquest.betonquest.api.QuestException;
 import org.betonquest.betonquest.api.config.quest.QuestPackage;
+import org.betonquest.betonquest.api.identifier.ItemIdentifier;
+import org.betonquest.betonquest.api.identifier.QuestCancelerIdentifier;
 import org.betonquest.betonquest.api.instruction.Argument;
 import org.betonquest.betonquest.api.instruction.argument.parser.LocationParser;
 import org.betonquest.betonquest.api.instruction.argument.parser.StringParser;
@@ -19,7 +21,6 @@ import org.betonquest.betonquest.data.PlayerDataStorage;
 import org.betonquest.betonquest.feature.QuestCanceler;
 import org.betonquest.betonquest.id.ItemID;
 import org.betonquest.betonquest.id.JournalEntryID;
-import org.betonquest.betonquest.id.QuestCancelerID;
 import org.betonquest.betonquest.kernel.processor.SectionProcessor;
 import org.betonquest.betonquest.lib.instruction.argument.DefaultArgument;
 import org.betonquest.betonquest.lib.instruction.argument.DefaultListArgument;
@@ -31,7 +32,7 @@ import org.bukkit.configuration.ConfigurationSection;
 /**
  * Stores Quest Canceler.
  */
-public class CancelerProcessor extends SectionProcessor<QuestCancelerID, QuestCanceler> {
+public class CancelerProcessor extends SectionProcessor<QuestCancelerIdentifier, QuestCanceler> {
 
     /**
      * Logger factory to create new class specific logger.
@@ -93,7 +94,7 @@ public class CancelerProcessor extends SectionProcessor<QuestCancelerID, QuestCa
         final Text names = textCreator.parseFromSection(pack, section, "name");
         final String itemString = section.getString("item");
         final String rawItem = itemString == null ? pack.getConfig().getString("item.cancel_button") : itemString;
-        final ItemID item = rawItem == null ? null : new ItemID(placeholders, packManager, pack, rawItem);
+        final ItemIdentifier item = rawItem == null ? null : new ItemID(placeholders, packManager, pack, rawItem);
         final String rawLoc = section.getString("location");
         final Argument<Location> location = rawLoc == null ? null : new DefaultArgument<>(placeholders, pack, rawLoc, new LocationParser(Bukkit.getServer()));
         final StringParser stringParser = new StringParser();
@@ -108,10 +109,5 @@ public class CancelerProcessor extends SectionProcessor<QuestCancelerID, QuestCa
         final BetonQuestLogger logger = loggerFactory.create(QuestCanceler.class);
         return new QuestCanceler(logger, questTypeApi, playerDataStorage, getIdentifier(pack, section.getName()),
                 api.getFeatureApi(), pluginMessage, names, item, pack, cancelData);
-    }
-
-    @Override
-    protected QuestCancelerID getIdentifier(final QuestPackage pack, final String identifier) throws QuestException {
-        return new QuestCancelerID(placeholders, packManager, pack, identifier);
     }
 }

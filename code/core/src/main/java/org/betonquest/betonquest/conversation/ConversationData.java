@@ -8,6 +8,8 @@ import org.betonquest.betonquest.api.bukkit.config.custom.unmodifiable.Unmodifia
 import org.betonquest.betonquest.api.config.quest.QuestPackage;
 import org.betonquest.betonquest.api.config.quest.QuestPackageManager;
 import org.betonquest.betonquest.api.feature.ConversationApi;
+import org.betonquest.betonquest.api.identifier.ActionIdentifier;
+import org.betonquest.betonquest.api.identifier.ConditionIdentifier;
 import org.betonquest.betonquest.api.instruction.Argument;
 import org.betonquest.betonquest.api.instruction.argument.InstructionArgumentParser;
 import org.betonquest.betonquest.api.instruction.argument.parser.StringParser;
@@ -422,7 +424,7 @@ public class ConversationData {
      * @return the conditions required for the specified option to be selected
      */
     @SuppressWarnings("NullAway")
-    public List<ConditionID> getConditionIDs(final String option, final OptionType type) {
+    public List<ConditionIdentifier> getConditionIDs(final String option, final OptionType type) {
         final Map<String, ConversationOption> options = type == NPC ? npcOptions : playerOptions;
         return options.get(option).getConditions();
     }
@@ -435,7 +437,7 @@ public class ConversationData {
      * @param type    the type of the option
      * @return a list of {@link ActionID}s
      */
-    public List<ActionID> getActionIDs(final Profile profile, final ResolvedOption option, final OptionType type) {
+    public List<ActionIdentifier> getActionIDs(final Profile profile, final ResolvedOption option, final OptionType type) {
         final Map<String, ConversationOption> options;
         if (type == NPC) {
             options = option.conversationData().npcOptions;

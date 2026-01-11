@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * ID of an Objective.
  */
+@Deprecated
 public class ObjectiveID extends InstructionIdentifier {
 
     /**

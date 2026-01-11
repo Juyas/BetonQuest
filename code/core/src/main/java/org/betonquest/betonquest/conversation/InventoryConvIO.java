@@ -8,6 +8,7 @@ import org.betonquest.betonquest.BetonQuest;
 import org.betonquest.betonquest.api.QuestException;
 import org.betonquest.betonquest.api.common.component.FixedComponentLineWrapper;
 import org.betonquest.betonquest.api.config.quest.QuestPackageManager;
+import org.betonquest.betonquest.api.identifier.ItemIdentifier;
 import org.betonquest.betonquest.api.instruction.Argument;
 import org.betonquest.betonquest.api.logger.BetonQuestLogger;
 import org.betonquest.betonquest.api.profile.OnlineProfile;
@@ -165,7 +166,7 @@ public class InventoryConvIO implements Listener, ConversationIO {
         playerOptionsCount++;
         final String rawItem = properties.getString("item");
         try {
-            final Argument<ItemID> item = rawItem == null ? null
+            final Argument<ItemIdentifier> item = rawItem == null ? null
                     : new DefaultArgument<>(betonQuest.getQuestTypeApi().placeholders(), conv.getPackage(), rawItem,
                     (value) -> new ItemID(placeholders, packManager, conv.getPackage(), value));
             options.put(playerOptionsCount, Pair.of(colors.getOption().append(option), item));
@@ -228,12 +229,12 @@ public class InventoryConvIO implements Listener, ConversationIO {
             // count option numbers, starting with 1
             next++;
             // break if all options are set
-            final Pair<Component, Argument<ItemID>> pair = options.get(next);
+            final Pair<Component, Argument<ItemIdentifier>> pair = options.get(next);
             if (pair == null) {
                 break;
             }
             final Component option = pair.getKey();
-            final Argument<ItemID> itemID = pair.getValue();
+            final Argument<ItemIdentifier> itemID = pair.getValue();
             ItemStack item;
             try {
                 item = itemID == null ? new ItemStack(Material.ENDER_PEARL)

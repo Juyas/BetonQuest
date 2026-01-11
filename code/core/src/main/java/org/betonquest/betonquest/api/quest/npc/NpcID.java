@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Identifies a {@link org.betonquest.betonquest.api.quest.npc.Npc Npc} via the path syntax.
  */
+@Deprecated
 public class NpcID extends InstructionIdentifier {
 
     /**

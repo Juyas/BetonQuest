@@ -2,7 +2,6 @@ package org.betonquest.betonquest.menu.event;
 
 import org.betonquest.betonquest.api.profile.Profile;
 import org.betonquest.betonquest.menu.MenuID;
-import org.betonquest.betonquest.menu.MenuItemID;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.ClickType;
@@ -26,7 +25,7 @@ public class MenuClickEvent extends MenuEvent implements Cancellable {
     /**
      * Clicked Menu Item.
      */
-    private final MenuItemID itemId;
+    private final MenuItemIdentifier itemId;
 
     /**
      * Click Type.
@@ -47,7 +46,7 @@ public class MenuClickEvent extends MenuEvent implements Cancellable {
      * @param itemId    the clicked menu item
      * @param clickType the click type on the menu
      */
-    public MenuClickEvent(final Profile who, final MenuID menu, final int slot, final MenuItemID itemId, final ClickType clickType) {
+    public MenuClickEvent(final Profile who, final MenuID menu, final int slot, final MenuItemIdentifier itemId, final ClickType clickType) {
         super(who, menu);
         this.clickType = clickType;
         this.itemId = itemId;
@@ -77,7 +76,7 @@ public class MenuClickEvent extends MenuEvent implements Cancellable {
      *
      * @return the internal id of the item in the clicked slot
      */
-    public MenuItemID getItemId() {
+    public MenuItemIdentifier getItemId() {
         return itemId;
     }
 

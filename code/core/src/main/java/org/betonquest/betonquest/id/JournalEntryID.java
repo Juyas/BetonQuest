@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Represents a journal entry ID.
  */
+@Deprecated
 public class JournalEntryID extends InstructionIdentifier {
 
     /**

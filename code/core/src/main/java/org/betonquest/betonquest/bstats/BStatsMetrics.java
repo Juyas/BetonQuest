@@ -2,7 +2,7 @@ package org.betonquest.betonquest.bstats;
 
 import org.betonquest.betonquest.BetonQuest;
 import org.betonquest.betonquest.api.QuestException;
-import org.betonquest.betonquest.api.identifier.InstructionIdentifier;
+import org.betonquest.betonquest.api.identifier.ReadableIdentifier;
 import org.betonquest.betonquest.compatibility.Compatibility;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.AdvancedPie;
@@ -41,7 +41,7 @@ public class BStatsMetrics {
      * @param compatibility    the compatibility instance to use for hooked plugins
      */
     public BStatsMetrics(final Plugin plugin, final Metrics metrics,
-                         final Map<String, InstructionMetricsSupplier<? extends InstructionIdentifier>> metricsSuppliers,
+                         final Map<String, InstructionMetricsSupplier<? extends ReadableIdentifier>> metricsSuppliers,
                          final Compatibility compatibility) {
         this.plugin = plugin;
         this.metrics = metrics;
@@ -68,18 +68,18 @@ public class BStatsMetrics {
         return map;
     }
 
-    private void listUsage(final String bStatsId, final InstructionMetricsSupplier<? extends InstructionIdentifier> instructionMetricsSupplier) {
+    private void listUsage(final String bStatsId, final InstructionMetricsSupplier<? extends ReadableIdentifier> instructionMetricsSupplier) {
         metrics.addCustomChart(new AdvancedPie(bStatsId + "Count", () -> countUsages(instructionMetricsSupplier)));
         metrics.addCustomChart(new AdvancedPie(bStatsId + "Enabled", () -> collectEnabled(instructionMetricsSupplier)));
     }
 
-    private Map<String, Integer> collectEnabled(final InstructionMetricsSupplier<? extends InstructionIdentifier> instructionMetricsSupplier) {
+    private Map<String, Integer> collectEnabled(final InstructionMetricsSupplier<? extends ReadableIdentifier> instructionMetricsSupplier) {
         final Map<String, Integer> enabled = new HashMap<>();
         countUsages(instructionMetricsSupplier).forEach((key, count) -> enabled.put(key, 1));
         return enabled;
     }
 
-    private Map<String, Integer> countUsages(final InstructionMetricsSupplier<? extends InstructionIdentifier> instructionMetricsSupplier) {
+    private Map<String, Integer> countUsages(final InstructionMetricsSupplier<? extends ReadableIdentifier> instructionMetricsSupplier) {
         final Set<String> validTypes = instructionMetricsSupplier.getTypes();
         return instructionMetricsSupplier.getIdentifiers().stream()
                 .map(this::typeFromId)
@@ -88,7 +88,7 @@ public class BStatsMetrics {
     }
 
     @Nullable
-    private String typeFromId(final InstructionIdentifier identifier) {
+    private String typeFromId(final ReadableIdentifier identifier) {
         try {
             return identifier.getInstruction().getPart(0);
         } catch (final QuestException ex) {

@@ -3,13 +3,14 @@ package org.betonquest.betonquest.kernel.processor.feature;
 import org.betonquest.betonquest.api.QuestException;
 import org.betonquest.betonquest.api.config.quest.QuestPackage;
 import org.betonquest.betonquest.api.config.quest.QuestPackageManager;
+import org.betonquest.betonquest.api.identifier.ConditionIdentifier;
+import org.betonquest.betonquest.api.identifier.JournalMainPageIdentifier;
 import org.betonquest.betonquest.api.instruction.Argument;
 import org.betonquest.betonquest.api.logger.BetonQuestLogger;
 import org.betonquest.betonquest.api.quest.Placeholders;
 import org.betonquest.betonquest.api.quest.condition.ConditionID;
 import org.betonquest.betonquest.api.text.Text;
 import org.betonquest.betonquest.feature.journal.JournalMainPageEntry;
-import org.betonquest.betonquest.id.JournalMainPageID;
 import org.betonquest.betonquest.kernel.processor.SectionProcessor;
 import org.betonquest.betonquest.lib.instruction.argument.DefaultListArgument;
 import org.betonquest.betonquest.text.ParsedSectionTextCreator;
@@ -20,7 +21,7 @@ import java.util.List;
 /**
  * Loads and stores Journal Main Pages.
  */
-public class JournalMainPageProcessor extends SectionProcessor<JournalMainPageID, JournalMainPageEntry> {
+public class JournalMainPageProcessor extends SectionProcessor<JournalMainPageIdentifier, JournalMainPageEntry> {
 
     /**
      * Text creator to parse text.
@@ -47,15 +48,10 @@ public class JournalMainPageProcessor extends SectionProcessor<JournalMainPageID
         if (priority < 0) {
             throw new QuestException("Priority of journal main page needs to be at least 0!");
         }
-        final Argument<List<ConditionID>> conditions = new DefaultListArgument<>(placeholders, pack,
+        final Argument<List<ConditionIdentifier>> conditions = new DefaultListArgument<>(placeholders, pack,
                 section.getString("conditions", ""),
                 value -> new ConditionID(placeholders, packManager, pack, value));
         final Text text = textCreator.parseFromSection(pack, section, "text");
         return new JournalMainPageEntry(priority, conditions, text);
-    }
-
-    @Override
-    protected JournalMainPageID getIdentifier(final QuestPackage pack, final String identifier) throws QuestException {
-        return new JournalMainPageID(packManager, pack, identifier);
     }
 }

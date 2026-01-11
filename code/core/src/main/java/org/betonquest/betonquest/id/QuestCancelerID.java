@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Represents a quest canceler ID.
  */
+@Deprecated
 public class QuestCancelerID extends InstructionIdentifier {
 
     /**

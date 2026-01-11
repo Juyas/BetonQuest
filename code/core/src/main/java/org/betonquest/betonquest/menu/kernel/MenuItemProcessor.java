@@ -5,18 +5,19 @@ import org.betonquest.betonquest.api.config.ConfigAccessor;
 import org.betonquest.betonquest.api.config.quest.QuestPackage;
 import org.betonquest.betonquest.api.config.quest.QuestPackageManager;
 import org.betonquest.betonquest.api.feature.FeatureApi;
+import org.betonquest.betonquest.api.identifier.ActionIdentifier;
+import org.betonquest.betonquest.api.identifier.ConditionIdentifier;
+import org.betonquest.betonquest.api.identifier.MenuItemIdentifier;
 import org.betonquest.betonquest.api.instruction.Argument;
 import org.betonquest.betonquest.api.instruction.argument.parser.BooleanParser;
 import org.betonquest.betonquest.api.instruction.type.ItemWrapper;
 import org.betonquest.betonquest.api.logger.BetonQuestLogger;
 import org.betonquest.betonquest.api.logger.BetonQuestLoggerFactory;
 import org.betonquest.betonquest.api.quest.QuestTypeApi;
-import org.betonquest.betonquest.api.quest.action.ActionID;
 import org.betonquest.betonquest.api.quest.condition.ConditionID;
 import org.betonquest.betonquest.api.text.Text;
 import org.betonquest.betonquest.lib.instruction.argument.DefaultArgument;
 import org.betonquest.betonquest.menu.MenuItem;
-import org.betonquest.betonquest.menu.MenuItemID;
 import org.betonquest.betonquest.text.ParsedSectionTextCreator;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -25,7 +26,7 @@ import java.util.List;
 /**
  * Processor to create and store {@link MenuItem}s.
  */
-public class MenuItemProcessor extends RPGMenuProcessor<MenuItemID, MenuItem> {
+public class MenuItemProcessor extends RPGMenuProcessor<MenuItemIdentifier, MenuItem> {
 
     /**
      * Text config property for Item lore.
@@ -74,16 +75,11 @@ public class MenuItemProcessor extends RPGMenuProcessor<MenuItemID, MenuItem> {
             descriptions = null;
         }
         final MenuItem.ClickActions clickActions = helper.getClickActions();
-        final Argument<List<ConditionID>> conditions = helper.getID("conditions", ConditionID::new);
+        final Argument<List<ConditionIdentifier>> conditions = helper.getID("conditions", ConditionID::new);
         final String rawClose = section.getString("close", config.getString("menu.default_close", "false"));
         final Argument<Boolean> close = new DefaultArgument<>(placeholders, pack, rawClose, new BooleanParser());
         final BetonQuestLogger log = loggerFactory.create(MenuItem.class);
         return new MenuItem(log, questTypeApi, item, getIdentifier(pack, section.getName()), descriptions, clickActions, conditions, close);
-    }
-
-    @Override
-    protected MenuItemID getIdentifier(final QuestPackage pack, final String identifier) throws QuestException {
-        return new MenuItemID(packManager, pack, identifier);
     }
 
     /**
@@ -114,8 +110,8 @@ public class MenuItemProcessor extends RPGMenuProcessor<MenuItemID, MenuItem> {
             return new MenuItem.ClickActions(getActions("click"));
         }
 
-        private Argument<List<ActionID>> getActions(final String key) throws QuestException {
-            return getID(key, ActionID::new);
+        private Argument<List<ActionIdentifier>> getActions(final String key) throws QuestException {
+            return getID(key, ActionIdentifier::new);
         }
     }
 }

@@ -1,6 +1,7 @@
 package org.betonquest.betonquest.kernel.registry.quest;
 
 import org.betonquest.betonquest.api.QuestException;
+import org.betonquest.betonquest.api.identifier.NpcIdentifier;
 import org.betonquest.betonquest.api.instruction.Instruction;
 import org.betonquest.betonquest.api.logger.BetonQuestLogger;
 import org.betonquest.betonquest.api.profile.OnlineProfile;
@@ -47,7 +48,7 @@ public class NpcTypeRegistry extends FactoryTypeRegistry<NpcWrapper<?>> implemen
      *
      * @param npcId the id to add store in the mapping
      */
-    public void addIdentifier(final NpcID npcId) {
+    public void addIdentifier(final NpcIdentifier npcId) {
         final String resolved;
         try {
             final Instruction instruction = npcId.getInstruction();
@@ -71,8 +72,8 @@ public class NpcTypeRegistry extends FactoryTypeRegistry<NpcWrapper<?>> implemen
     }
 
     @Override
-    public Set<NpcID> getIdentifier(final Npc<?> npc, @Nullable final OnlineProfile profile) {
-        final Set<NpcID> npcIds = new HashSet<>();
+    public Set<NpcIdentifier> getIdentifier(final Npc<?> npc, @Nullable final OnlineProfile profile) {
+        final Set<NpcIdentifier> npcIds = new HashSet<>();
         for (final NpcReverseIdentifier backFire : reverseIdentifiers) {
             npcIds.addAll(backFire.getIdsFromNpc(npc, profile));
         }

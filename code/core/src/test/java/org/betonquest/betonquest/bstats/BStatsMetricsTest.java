@@ -4,6 +4,7 @@ import org.betonquest.betonquest.api.QuestException;
 import org.betonquest.betonquest.api.config.quest.QuestPackage;
 import org.betonquest.betonquest.api.config.quest.QuestPackageManager;
 import org.betonquest.betonquest.api.identifier.InstructionIdentifier;
+import org.betonquest.betonquest.api.identifier.ReadableIdentifier;
 import org.betonquest.betonquest.api.instruction.DefaultInstruction;
 import org.betonquest.betonquest.api.instruction.Instruction;
 import org.betonquest.betonquest.api.instruction.argument.ArgumentParsers;
@@ -137,9 +138,9 @@ class BStatsMetricsTest {
         final Metrics bstatsMetrics = mock(Metrics.class);
         final ArgumentCaptor<CustomChart> chartArgumentCaptor = ArgumentCaptor.forClass(CustomChart.class);
 
-        final Map<InstructionIdentifier, Void> ids = new HashMap<>();
+        final Map<ReadableIdentifier, Void> ids = new HashMap<>();
 
-        final InstructionIdentifier firstId = mock(InstructionIdentifier.class);
+        final ReadableIdentifier firstId = mock(ReadableIdentifier.class);
         final Instruction firstInstruction = new DefaultInstruction(mock(Placeholders.class),
                 mock(QuestPackageManager.class), questPackage, firstId, mock(ArgumentParsers.class), TEST_INSTRUCTION);
         when(firstId.getInstruction()).thenReturn(firstInstruction);
@@ -148,7 +149,7 @@ class BStatsMetricsTest {
         final Map<String, Void> types = new HashMap<>();
         types.put(TEST_INSTRUCTION, null);
 
-        final InstructionMetricsSupplier<InstructionIdentifier> metricsSupplier = new CompositeInstructionMetricsSupplier<>(ids::keySet, types::keySet);
+        final InstructionMetricsSupplier<ReadableIdentifier> metricsSupplier = new CompositeInstructionMetricsSupplier<>(ids::keySet, types::keySet);
 
         new BStatsMetrics(plugin, bstatsMetrics, Map.of("id", metricsSupplier), mock(Compatibility.class));
 

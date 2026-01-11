@@ -8,15 +8,15 @@ import org.betonquest.betonquest.api.bukkit.event.QuestCompassTargetChangeEvent;
 import org.betonquest.betonquest.api.config.ConfigAccessor;
 import org.betonquest.betonquest.api.config.quest.QuestPackageManager;
 import org.betonquest.betonquest.api.feature.FeatureApi;
+import org.betonquest.betonquest.api.identifier.CompassIdentifier;
+import org.betonquest.betonquest.api.identifier.ItemIdentifier;
+import org.betonquest.betonquest.api.identifier.QuestCancelerIdentifier;
 import org.betonquest.betonquest.api.logger.BetonQuestLogger;
 import org.betonquest.betonquest.api.profile.OnlineProfile;
 import org.betonquest.betonquest.api.quest.Placeholders;
 import org.betonquest.betonquest.config.PluginMessage;
 import org.betonquest.betonquest.database.PlayerData;
 import org.betonquest.betonquest.feature.journal.Journal;
-import org.betonquest.betonquest.id.CompassID;
-import org.betonquest.betonquest.id.ItemID;
-import org.betonquest.betonquest.id.QuestCancelerID;
 import org.betonquest.betonquest.item.typehandler.QuestHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -328,7 +328,7 @@ public class Backpack implements Listener {
             if (buttonString != null && !buttonString.isEmpty()) {
                 present = true;
                 try {
-                    final ItemID itemId = new ItemID(placeholders, packManager, null, buttonString);
+                    final ItemIdentifier itemId = new ItemID(placeholders, packManager, null, buttonString);
                     stack = BetonQuest.getInstance().getFeatureApi().getItem(itemId, onlineProfile).generate(1);
                 } catch (final QuestException e) {
                     log.warn("Could not load " + button + " button: " + e.getMessage(), e);
@@ -441,7 +441,7 @@ public class Backpack implements Listener {
         public Cancelers() {
             super();
             final List<QuestCanceler> cancelers = new ArrayList<>();
-            for (final Map.Entry<QuestCancelerID, QuestCanceler> entry : BetonQuest.getInstance().getFeatureApi().getCancelers().entrySet()) {
+            for (final Map.Entry<QuestCancelerIdentifier, QuestCanceler> entry : BetonQuest.getInstance().getFeatureApi().getCancelers().entrySet()) {
                 try {
                     if (entry.getValue().isCancelable(onlineProfile)) {
                         cancelers.add(entry.getValue());
@@ -505,7 +505,7 @@ public class Backpack implements Listener {
             super();
             int counter = 0;
             final FeatureApi featureApi = BetonQuest.getInstance().getFeatureApi();
-            for (final Map.Entry<CompassID, QuestCompass> entry : featureApi.getCompasses().entrySet()) {
+            for (final Map.Entry<CompassIdentifier, QuestCompass> entry : featureApi.getCompasses().entrySet()) {
                 if (playerData.hasTag(entry.getKey().getTag())) {
                     compasses.put(counter, entry.getValue());
                     counter++;
@@ -539,7 +539,7 @@ public class Backpack implements Listener {
             int index = 0;
             for (final Map.Entry<Integer, QuestCompass> entry : compasses.entrySet()) {
                 final QuestCompass comp = entry.getValue();
-                final ItemID item = comp.itemID();
+                final ItemIdentifier item = comp.itemID();
                 if (item == null) {
                     continue;
                 }

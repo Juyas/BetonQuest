@@ -3,6 +3,8 @@ package org.betonquest.betonquest.api.quest.npc.feature;
 import org.betonquest.betonquest.api.QuestException;
 import org.betonquest.betonquest.api.config.quest.QuestPackage;
 import org.betonquest.betonquest.api.config.quest.QuestPackageManager;
+import org.betonquest.betonquest.api.identifier.ConditionIdentifier;
+import org.betonquest.betonquest.api.identifier.NpcIdentifier;
 import org.betonquest.betonquest.api.logger.BetonQuestLogger;
 import org.betonquest.betonquest.api.profile.OnlineProfile;
 import org.betonquest.betonquest.api.profile.ProfileProvider;
@@ -71,7 +73,7 @@ public class NpcHider {
     /**
      * Npc ids mapped to their hide conditions.
      */
-    private final Map<NpcID, Set<ConditionID>> npcs;
+    private final Map<NpcIdentifier, Set<ConditionIdentifier>> npcs;
 
     /**
      * The task refreshing npc visibility.
@@ -120,13 +122,13 @@ public class NpcHider {
     }
 
     private void loadKey(final QuestPackage pack, final ConfigurationSection section, final String idString) throws QuestException {
-        final NpcID npcId = new NpcID(placeholders, packManager, pack, idString);
+        final NpcIdentifier npcId = new NpcID(placeholders, packManager, pack, idString);
 
         final String conditionsString = section.getString(idString);
         if (conditionsString == null) {
             throw new QuestException("No conditions defined");
         }
-        final List<ConditionID> conditions = new DefaultListArgument<>(placeholders, pack, conditionsString,
+        final List<ConditionIdentifier> conditions = new DefaultListArgument<>(placeholders, pack, conditionsString,
                 string -> new ConditionID(placeholders, packManager, pack, string)).getValue(null);
 
         if (npcs.containsKey(npcId)) {
@@ -166,8 +168,8 @@ public class NpcHider {
      * @param profile the profile to check conditions for
      * @return if the npc is stored and the hide conditions are met
      */
-    public boolean isHidden(final NpcID npcId, final OnlineProfile profile) {
-        final Set<ConditionID> conditions = npcs.get(npcId);
+    public boolean isHidden(final NpcIdentifier npcId, final OnlineProfile profile) {
+        final Set<ConditionIdentifier> conditions = npcs.get(npcId);
         if (conditions == null || conditions.isEmpty()) {
             return false;
         }
@@ -183,11 +185,11 @@ public class NpcHider {
      */
     public boolean isHidden(final Npc<?> npc, final Player player) {
         final OnlineProfile onlineProfile = profileProvider.getProfile(player);
-        final Set<NpcID> identifier = npcTypes.getIdentifier(npc, onlineProfile);
+        final Set<NpcIdentifier> identifier = npcTypes.getIdentifier(npc, onlineProfile);
         if (identifier.isEmpty()) {
             return false;
         }
-        for (final NpcID npcID : identifier) {
+        for (final NpcIdentifier npcID : identifier) {
             if (isHidden(npcID, onlineProfile)) {
                 return true;
             }
@@ -201,8 +203,8 @@ public class NpcHider {
      * @param onlineProfile the online profile of the player
      * @param npcId         the id of the Npc
      */
-    public void applyVisibility(final OnlineProfile onlineProfile, final NpcID npcId) {
-        final Set<ConditionID> conditions = npcs.get(npcId);
+    public void applyVisibility(final OnlineProfile onlineProfile, final NpcIdentifier npcId) {
+        final Set<ConditionIdentifier> conditions = npcs.get(npcId);
         if (conditions == null) {
             return;
         }
@@ -228,7 +230,7 @@ public class NpcHider {
      * @param onlineProfile the online profile of the player
      */
     public void applyVisibility(final OnlineProfile onlineProfile) {
-        for (final NpcID npcId : npcs.keySet()) {
+        for (final NpcIdentifier npcId : npcs.keySet()) {
             applyVisibility(onlineProfile, npcId);
         }
     }
@@ -238,7 +240,7 @@ public class NpcHider {
      *
      * @param npcId the id of the Npc
      */
-    public void applyVisibility(final NpcID npcId) {
+    public void applyVisibility(final NpcIdentifier npcId) {
         for (final OnlineProfile onlineProfile : profileProvider.getOnlineProfiles()) {
             applyVisibility(onlineProfile, npcId);
         }
@@ -249,7 +251,7 @@ public class NpcHider {
      */
     public void applyVisibility() {
         for (final OnlineProfile onlineProfile : profileProvider.getOnlineProfiles()) {
-            for (final NpcID npcId : npcs.keySet()) {
+            for (final NpcIdentifier npcId : npcs.keySet()) {
                 applyVisibility(onlineProfile, npcId);
             }
         }
