@@ -30,6 +30,7 @@ import org.betonquest.betonquest.api.profile.OnlineProfile;
 import org.betonquest.betonquest.api.profile.ProfileProvider;
 import org.betonquest.betonquest.api.quest.QuestTypeApi;
 import org.betonquest.betonquest.api.quest.QuestTypeRegistries;
+import org.betonquest.betonquest.api.service.ConditionManager;
 import org.betonquest.betonquest.api.service.DefaultBetonQuestApi;
 import org.betonquest.betonquest.api.service.DefaultBetonQuestApiService;
 import org.betonquest.betonquest.api.service.DefaultBetonQuestInstructions;
@@ -835,6 +836,17 @@ public class BetonQuest extends JavaPlugin implements BetonQuestApi, LanguagePro
      */
     public Saver getSaver() {
         return saver;
+    }
+
+    /**
+     * Returns the ConditionManager.
+     *
+     * @return the condition manager
+     * @deprecated should be replaced with qualified api injections soon
+     */
+    @Deprecated
+    public ConditionManager getConditionManager() {
+        return questRegistry.core().conditions();
     }
 
     /**

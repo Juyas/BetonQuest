@@ -106,6 +106,7 @@ import org.betonquest.betonquest.quest.action.tag.TagGlobalActionFactory;
 import org.betonquest.betonquest.quest.action.tag.TagPlayerActionFactory;
 import org.betonquest.betonquest.quest.action.take.TakeActionFactory;
 import org.betonquest.betonquest.quest.action.teleport.TeleportActionFactory;
+import org.betonquest.betonquest.quest.action.test.ConditionTestActionFactory;
 import org.betonquest.betonquest.quest.action.time.TimeActionFactory;
 import org.betonquest.betonquest.quest.action.variable.VariableActionFactory;
 import org.betonquest.betonquest.quest.action.velocity.VelocityActionFactory;
@@ -480,6 +481,7 @@ public class CoreQuestTypes {
         actionTypes.registerCombined("tag", new TagPlayerActionFactory(dataStorage, betonQuest.getSaver(), profileProvider));
         actionTypes.register("take", new TakeActionFactory(loggerFactory, pluginMessage));
         actionTypes.register("teleport", new TeleportActionFactory(loggerFactory, featureApi.conversationApi()));
+        actionTypes.registerCombined("test", new ConditionTestActionFactory(loggerFactory, betonQuest.getConditionManager()));
         actionTypes.registerCombined("time", new TimeActionFactory());
         actionTypes.register("updatevisibility", new UpdateVisibilityNowActionFactory(featureApi.getNpcHider(), loggerFactory));
         actionTypes.register("variable", new VariableActionFactory(questTypeApi));
