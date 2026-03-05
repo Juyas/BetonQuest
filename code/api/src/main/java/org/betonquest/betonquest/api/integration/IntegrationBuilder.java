@@ -13,22 +13,25 @@ public interface IntegrationBuilder {
      * Registers functionality to be called when the integration is enabled.
      *
      * @param enable the integration to enable
+     * @return this
      */
-    void enable(Consumer<BetonQuestApi> enable);
+    IntegrationBuilder enable(Consumer<BetonQuestApi> enable);
 
     /**
      * Registers functionality to be enabled after all plugins are enabled.
      *
      * @param postEnable the integration to enable
+     * @return this
      */
-    void postEnable(Consumer<BetonQuestApi> postEnable);
+    IntegrationBuilder postEnable(Consumer<BetonQuestApi> postEnable);
 
     /**
      * Registers functionality to be called when the integration is disabled.
      *
      * @param teardown the integration to disable
+     * @return this
      */
-    void teardown(Runnable teardown);
+    IntegrationBuilder teardown(Runnable teardown);
 
     /**
      * Finalizes the builder by registering the integration with all its methods.
