@@ -15,4 +15,20 @@ public interface Integration {
      * @throws QuestException if the integration fails
      */
     void enable(BetonQuestApi betonQuestApi) throws QuestException;
+
+    /**
+     * Enables all parts of the integration that are required to load after all plugins have been enabled.
+     * Will run in the first tick after all plugins have been enabled.
+     *
+     * @param betonQuestApi the BetonQuest API
+     * @throws QuestException if the integration fails
+     */
+    void postEnable(BetonQuestApi betonQuestApi) throws QuestException;
+
+    /**
+     * Disables the integration.
+     *
+     * @throws QuestException if the integration teardown fails
+     */
+    void disable() throws QuestException;
 }
