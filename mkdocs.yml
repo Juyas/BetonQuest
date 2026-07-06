@@ -100,6 +100,7 @@ nav:
           - 'Quest Cancelers': Documentation/Advanced/Quest-Cancelers.md
           - 'Player Hider': Documentation/Advanced/Player-Hider.md
           - 'Schedules': Documentation/Advanced/Schedules.md
+          - 'Functions': Documentation/Advanced/Functions.md
           - 'Parties': Documentation/Advanced/Parties.md
           - "Notify IO's & Categories": Documentation/Advanced/Notification-IO's-&-Categories.md
           - 'Notification Settings': Documentation/Advanced/Notification-Settings.md
