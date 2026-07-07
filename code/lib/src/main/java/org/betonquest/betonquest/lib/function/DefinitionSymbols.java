@@ -21,9 +21,9 @@ import java.util.Map;
  * <pre>
  * {@code
  * <value> ::= <number> | <string> | 'true' | 'false'
- * <parameter> ::= <qualifier> | <qualifier> : <value>
- * <parameter-list> ::= <parameter> | <parameter> , <parameter-list>
- * <definition> ::= <qualifier> | <qualifier>(<parameter-list>)
+ * <parameter> ::= <qualifier> | <qualifier> ':' <value>
+ * <parameter-list> ::= <parameter> | <parameter> ',' <parameter-list>
+ * <definition> ::= <qualifier>(<parameter-list>)
  * }
  * </pre>
  *
@@ -100,6 +100,10 @@ public interface DefinitionSymbols {
                 final List<Map.Entry<String, FunctionAssignment>> parameterList = PARAMETER_LIST.parse(scanner);
                 scanner.consume(DefaultTokens.DEFINITION_CLOSE_BRACKET, "Missing closing bracket for function definition.");
                 return assignments -> {
+                    final long requiredParameters = parameterList.stream().filter(param -> param.getValue() instanceof DefaultFallbackAssignment).count();
+                    if (assignments.size() < requiredParameters) {
+                        throw new QuestException("Missing %s parameter(s) for function definition.".formatted(requiredParameters - assignments.size()));
+                    }
                     final Map<String, FunctionAssignment> result = new HashMap<>(parameterList.size());
                     for (int i = 0; i < parameterList.size(); i++) {
                         final Map.Entry<String, FunctionAssignment> entry = parameterList.get(i);

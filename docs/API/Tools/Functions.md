@@ -19,6 +19,9 @@ status: new
 
 This page covers the functions API and the underlying concepts.
 
+!!! info "Function Basics"
+    See [Functions](../../Documentation/Advanced/Functions.md) for more information about how functions work in the script.
+
 ## Introduction
 
 Functions solve a problem that is not common in BetonQuest's scripting language, but not having them is a huge pain in specific situations.
@@ -26,24 +29,22 @@ They combine logic with math and are a powerful tool for creating complex behavi
 that otherwise would be very verbose with just actions and conditions or completely impossible in the first place.
 
 ## Accessing Functions
-
-!!! danger "API currently not backed"
-    Functions are currently not available in the BetonQuest scripting language and therefore cannot be accessed.
-    The discription below is still valid as the API endpoints are technically implemented. They just won't give any results yet.
     
 Functions are accessed through the `Functions` interface. It allows you to find and evaluate functions.
 ```java
 public void myFunction(final Functions functions, final FunctionIdentifier identifier) throws QuestException {
     final MathFunction mathFunction = functions.getFunction(identifier); //(1)!
-    final FunctionAssignment result = mathFunction.evaluate(functions, List.of(new NumberSourceAssignment(10)); //(2)!
-    final Number value = result.asNumber(); //(3)!
+    final FunctionProvider functionProvider = functions.getFunctionProvider(identifier.getPackage()); //(2)!
+    final FunctionAssignment result = mathFunction.evaluate(functionProvider, List.of(new NumberSourceAssignment(10)); //(3)!
+    final Number value = result.asNumber(); //(4)!
 }
 ```
 
 1. `getFunction` returns a `MathFunction` object that can be used to evaluate the function. This may throw a `QuestException` if the function is not found.
-2. `evaluate` takes a list of `FunctionAssignment` objects that are used to evaluate the function. Functions can be evaluated with any number of arguments, but
+2. `getFunctionProvider` returns a `FunctionProvider` object that can be used to resolve relative function identifiers to `MathFunction` objects.
+3. `evaluate` takes a list of `FunctionAssignment` objects that are used to evaluate the function. Functions can be evaluated with any number of arguments, but
 the required number of arguments is defined by the function definition. Missing arguments might result in an error, too many arguments might be just ignored and have no effect.
-3. Functions produce their result as `FunctionAssignment`s that can be passed to other functions or resolved to java values. 
+4. Functions produce their result as `FunctionAssignment`s that can be passed to other functions or resolved to java values. 
 `asNumber` (as an example) returns the result of the function as a `Number` object.
 
 You can also skip the `getFunction` step and use the `evaluate` method directly.
