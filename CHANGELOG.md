@@ -11,6 +11,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `unit` optional argument in `burn` action to specify the time unit for the duration
 - `translate` placeholder parsing languages from `constants` section
 - `heal` action to change the current health of a player
+- `functions` section to define mathematical functions
+- `function` condition to evaluate a function as a condition
 ### Changed
 - `language` config option is now a section; the default language moved to `language.default`
 - `burn` action to no longer require its duration argument to specify its name `duration`
