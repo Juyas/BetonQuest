@@ -87,6 +87,33 @@ A list of all data types that require a special and more elaborate explanation.
     A regex is allowed in any block state value when the block selector is used to **match** blocks.
     You cannot use a regex in block states when the block selector is used for **placing** blocks.
 
+### Identifiers
+
+!!! info "Identifier"
+
+    Identifiers are used to identify elements in packages. 
+    They are usually defined as relative paths and consist of two parts:
+    
+    - An optional `package` path
+    - An `identifier` uniquely identifying the element within the package
+    
+    The path is separated by a `>` character from the identifier if the package is defined.  
+    More information:
+     
+    - [package paths](../Basics/Packages-&-Templates.md) 
+    - [identifier subsections](../Basics/About-Scripting.md#subsections).
+
+    **Examples:**
+    
+    - `identifier`
+    - `identifier.subsection`
+    - `package>identifier`
+    - `package-subpackage>identifier`
+    - `_-package>identifier`
+    - `_-package-subpackage>identifier.subsection`
+    
+    
+
 ### Regular Expressions
 
 !!! info "Regular Expression"
