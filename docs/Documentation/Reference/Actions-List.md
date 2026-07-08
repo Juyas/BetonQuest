@@ -27,27 +27,29 @@ actions:
 ## `Cancel`
 
 __Context__: @snippet:action-meta:online@  
-__Syntax__: `cancel <canceler> [bypass]`  
+__Syntax__: `cancel <canceler> {bypass}`  
 __Description__: Call the specified quest canceler.
 
 This action works in the same way as a [quest canceler in the backpack](../Advanced/Quest-Cancelers.md).
 Running this action is equal to the player canceling a quest using the backpack.
 
-| Parameter  | Syntax             | Default Value          | Explanation                                                                                                                  |
-|------------|--------------------|------------------------|------------------------------------------------------------------------------------------------------------------------------|
-| _canceler_ | CancelerID         | :octicons-x-circle-16: | The Quest Canceler to execute.                                                                                               |
-| _bypass_   | Keyword (`bypass`) | Disabled               | If the canceler conditions should be ignored. If enabled the canceler will be executed, even when its conditions are not met.|
+| Parameter                                                            | Type                  | Explanation                                                                                                                   |
+|----------------------------------------------------------------------|-----------------------|-------------------------------------------------------------------------------------------------------------------------------|
+| canceler<br>[[Identifier]](./Definition-Encyclopedia.md#identifiers) | Required              | The identifier of the quest canceler to execute.                                                                              |
+| bypass<br>[Boolean]                                                  | Flag<br>[false, true] | If the canceler conditions should be ignored. If enabled the canceler will be executed, even when its conditions are not met. |
 
 ```YAML title="Example"
 actions:
-  cancelQuest: "cancel woodQuest bypass"
+  cancelSmallQuest: "cancel smallQuest"
+  cancelWoodQuest: "cancel woodQuest bypass"
+  cancelWaterQuest: "cancel _-package>waterQuest bypass:%tag.startedWaterQuest%"
 ```
 
 ## `CancelConversation`
 
 __Context__: @snippet:action-meta:online@  
 __Syntax__: `cancelconversation`  
-__Description__: Cancel a conversation that is currently active for the player.
+__Description__: Cancel the conversation that is currently active for the player.
 
 ```YAML title="Example"
 actions:
@@ -78,6 +80,10 @@ actions:
 __Context__: @snippet:action-meta:independent@  
 __Syntax__: `chestclear <location>`  
 __Description__: Remove all items from the chest at the specified location.
+
+| Parameter                                                                      | Type     | Explanation                                                                                                                              |
+|--------------------------------------------------------------------------------|----------|------------------------------------------------------------------------------------------------------------------------------------------|
+| location<br>[[Location]](./Definition-Encyclopedia.md#unified-location-format) | Required | The location of the chest to be cleared. In case there is no chest at the given location or it could not be cleared, an error is thrown. |
 
 ```YAML title="Example"
 actions:
