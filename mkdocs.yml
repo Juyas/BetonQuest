@@ -64,14 +64,14 @@ nav:
               - 'Daily Repetition': Tutorials/Features/Schedules/Daily-Repetition.md
               - 'Delayed Quest Steps': Tutorials/Features/Schedules/Delayed-Quest-Steps.md
               - 'Limited Time Events': Tutorials/Features/Schedules/Limited-Time-Events.md
-      - 'Tools':
+      - 'Tooling':
           - 'Handling YAML Errors': Tutorials/Tools/YAML-Errors.md
+          - 'Debugging Quest Logic': Tutorials/Tools/Debugging-Quest-Logic.md
       - 'Syntax':
           - 'Quest Packages': Tutorials/Syntax/Quest-Packages.md
       - 'Quick Guides':
           - 'Quest Progress & State':
               - 'Displaying Progress': Tutorials/Quick-Guides/Quest-Progress-and-State/Displaying-Progress.md
-              - 'Debugging Conditions and Objectives': Tutorials/Quick-Guides/Quest-Progress-and-State/Debugging-Conditions-and-Objectives.md
               - 'Objectives in any Order': Tutorials/Quick-Guides/Quest-Progress-and-State/Objectives-in-any-order.md
           - 'Player UI & Feedback':
               - 'Using the Journal': Tutorials/Quick-Guides/Player-UI-and-Feedback/Using-the-Journal.md
