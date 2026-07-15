@@ -129,6 +129,7 @@ releasePrepareModule() {
 releasePublish() {
   echo 'Release'
   checkDeploymentMaven
+  checkDeploymentGhPages
 
   echo '    Creating version tag for betonquest...'
   checkReleaseTagsFor . "v$CURRENT_VERSION"
@@ -167,6 +168,22 @@ checkDeploymentMaven() {
 
   if echo "$response" | grep -q "\"group\":\"$CURRENT_VERSION\""; then
     echo "    Version $CURRENT_VERSION is already deployed to the Maven repository!"
+    exit 1
+  fi
+}
+
+checkDeploymentGhPages() {
+  local major="${CURRENT_VERSION%.*}"
+  local url="https://raw.githubusercontent.com/BetonQuest/BetonQuest/refs/heads/gh-pages/$major/Documentation/CHANGELOG/index.html"
+
+  local response
+  if ! response="$(curl --silent --fail "$url" 2>/dev/null)"; then
+    return
+  fi
+
+  if echo "$response" | grep -Fq "$CURRENT_VERSION" &&
+     ! echo "$response" | grep -Fq "${CURRENT_VERSION}-DEV"; then
+    echo "    Version $CURRENT_VERSION is already deployed to the documentation!"
     exit 1
   fi
 }
