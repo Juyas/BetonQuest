@@ -128,25 +128,23 @@ releasePrepareModule() {
 
 releasePublish() {
   echo 'Release'
+  checkReleaseTagsFor . "v$CURRENT_VERSION*"
+  checkReleaseTagsFor docs/_tutorials "v$CURRENT_VERSION"
   checkDeploymentMaven
   checkDeploymentGhPages
 
   echo '    Creating version tag for betonquest...'
-  checkReleaseTagsFor . "v$CURRENT_VERSION"
-  checkReleaseTagsFor docs/_tutorials "v$CURRENT_VERSION"
   git tag "v$CURRENT_VERSION" HEAD 2>&1 > /dev/null | sed 's/^/        /'
   TAGS_TO_PUSH=("v$CURRENT_VERSION")
 
   if [ -n "$CURRENT_MODULE_VERSION_api" ]; then
     echo '    Creating version tag for api...'
-    checkReleaseTagsFor . "$CURRENT_MODULE_VERSION_api"
     git tag "$CURRENT_MODULE_VERSION_api" HEAD 2>&1 > /dev/null | sed 's/^/        /'
     TAGS_TO_PUSH+=("$CURRENT_MODULE_VERSION_api")
   fi
 
   if [ -n "$CURRENT_MODULE_VERSION_lib" ]; then
     echo '    Creating version tag for lib...'
-    checkReleaseTagsFor . "$CURRENT_MODULE_VERSION_lib"
     git tag "$CURRENT_MODULE_VERSION_lib" HEAD 2>&1 > /dev/null | sed 's/^/        /'
     TAGS_TO_PUSH+=("$CURRENT_MODULE_VERSION_lib")
   fi
