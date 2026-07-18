@@ -30,6 +30,7 @@ This project has a custom build-pipeline that utilizes GitHub('s) actions.
 - [x] A bash shell capable of Git is required. (especially on Windows, have a look at [ssh-agent](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases#auto-launching-ssh-agent-on-git-for-windows))
 - [x] A Maven installation is required to enable features like automatic version detection. That should be already installed on your system.
 - [x] A GitHub-CLI must be installed to enable features like automatic pull request creation and release date fetching. You can install it from [here](https://cli.github.com/).
+- [x] JQ (json query) must be installed to allow for automated changes to the roadmap files. More information can be found [here](https://github.com/bobbyiliev/introduction-to-bash-scripting/blob/main/ebook/en/content/018-working-with-json-in-bash-using-jq.md#installing-jq).
 
 ###Step 2: Before Releasing
 

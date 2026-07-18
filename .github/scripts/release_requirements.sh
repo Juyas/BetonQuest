@@ -8,6 +8,7 @@ checkRequirements() {
   checkGit
   checkMaven
   checkGitHubCLI
+  checkJQ
 
   checkGitState
 }
@@ -60,6 +61,18 @@ checkGitHubCLI() {
       echo '    GitHub CLI: ok'
       return 0
     fi
+  fi
+}
+
+checkJQ() {
+  if ! jq --version &> /dev/null
+  then
+      echo "    JSON Query (JQ): failed [no install found]"
+      echo "       For Windows: 'winget install jqlang.jq'"
+      echo "       For Unix: 'sudo apt-get install jq'"
+      exit 1
+  else
+    echo '    JSON Query (JQ): ok'
   fi
 }
 

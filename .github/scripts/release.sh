@@ -238,6 +238,8 @@ setupCommit() {
   NEW_CHANGELOG="## \[Unreleased\] - \${maven.build.timestamp}\n### Added\n### Changed\n### Deprecated\n### Removed\n### Fixed\n### Security\n"
   sed -i "s~## \[Unreleased\] - \${maven\.build\.timestamp}~$NEW_CHANGELOG\n## \[$CURRENT_VERSION\] - $RELEASE_TIME~g" CHANGELOG.md 2>&1 > /dev/null | sed 's/^/        /'
 
+  setupRoadmap
+
   CURRENT_MAJOR="${CURRENT_VERSION%%.*}"
   NEW_MAJOR="${NEW_VERSION%%.*}"
   if [ "$CURRENT_MAJOR" != "$NEW_MAJOR" ]; then
@@ -250,6 +252,28 @@ setupCommit() {
 
   echo '    Committing changed files...'
   git -c core.safecrlf=false commit --all --message="Bump version of BetonQuest to $NEW_VERSION" 2>&1 > /dev/null | sed 's/^/        /'
+}
+
+setupRoadmap() {
+  CURRENT_VERSION_SHORT="${CURRENT_VERSION%.*}"
+
+  CURRENT_ROADMAP_VERSION="$(jq -r '.meta.history.start' docs/_roadmap/roadmap.json).0"
+
+  if [[ "$NEW_VERSION" == "$CURRENT_ROADMAP_VERSION" ]]; then
+    echo '    No changes to Roadmap needed. Skipping...'
+    return
+  fi
+
+  CHANGELOG_LINK="Documentation/CHANGELOG/#${CURRENT_VERSION//./}-${RELEASE_TIME}"
+
+  echo '    Updating roadmap.json file...'
+  jq --arg version "$CURRENT_VERSION_SHORT" \
+     '(.meta.history.start) = $version' docs/_roadmap/roadmap.json > map-tmp.json && mv map-tmp.json docs/_roadmap/roadmap.json
+
+  echo '    Updating info-text.json file...'
+  jq --arg link "$CHANGELOG_LINK" \
+     --arg version "$CURRENT_VERSION_SHORT" \
+     '(.info[] | select(.id == $version) | .tiles.center.link) = $link' docs/_roadmap/info-text.json > text-tmp.json && mv text-tmp.json docs/_roadmap/info-text.json
 }
 
 bumpCommit() {
