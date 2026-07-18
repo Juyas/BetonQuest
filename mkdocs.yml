@@ -66,6 +66,7 @@ nav:
               - 'Limited Time Events': Tutorials/Features/Schedules/Limited-Time-Events.md
       - 'Tools':
           - 'Handling YAML Errors': Tutorials/Tools/YAML-Errors.md
+          - 'Debugging Quest Logic': Tutorials/Tools/Debugging-Quest-Logic.md
       - 'Syntax':
           - 'Quest Packages': Tutorials/Syntax/Quest-Packages.md
       - 'Quick Guides':
