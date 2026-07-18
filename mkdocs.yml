@@ -195,6 +195,8 @@ nav:
               - 'Migration 2.X to 3.X': Documentation/Updates/Migrations/Migration-2-3.md
           - 'Changelog': Documentation/CHANGELOG.md
 
+  - 'Roadmap': Roadmap/Path.md
+
   - 'API':
       - 'Overview': API/Overview.md
       - 'Obtaining API': API/Obtaining-API.md
