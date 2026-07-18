@@ -37,7 +37,7 @@ This project has a custom build-pipeline that utilizes GitHub('s) actions.
 - [x] Check out the remote branch or commit, that you want to use for the release.
 - [x] Make sure that the current version in all the files (pom.xml etc.) is the correct version that should be used for the
 release. 
-- [x] Make sure that the [Roadmap](../../Roadmap/Path.md) is up-to-date.
+- [x] Make sure that the [Roadmap](../../Roadmap/index.md) is up-to-date.
 
 ###Step 3: Build a release
 
